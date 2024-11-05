@@ -27,6 +27,8 @@ function calculateCounts(users: User[]) {
   return { activeSubscriptionCount, trialUsersCount };
 }
 
+export const runtime = "edge";
+
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(authOptions);
 

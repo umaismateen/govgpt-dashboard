@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "../lib";
 import { NextApiResponse } from "next";
 import { NextApiRequest } from "next";
 import { supabaseAdmin } from "@/lib/supabase/admin";
@@ -27,27 +27,27 @@ function calculateCounts(users: User[]) {
   return { activeSubscriptionCount, trialUsersCount };
 }
 
-export const runtime = "edge";
-
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const { data, error } = await supabaseAdmin.rpc(
-    // @ts-ignore
-    "get_user_data_with_subscription_and_usage"
-  );
-
+export async function GET(req: Request, res: Response) {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data, error } = await supabaseAdmin.rpc(
+      // @ts-ignore
+      "get_user_data_with_subscription_and_usage"
+    );
+    if (error) {
+      return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    }
     return Response.json({
       data,
       ...(data ? calculateCounts(data as unknown as User[]) : {}),
     });
   } catch (error) {
     console.error("Error finding users by IDs:", error);
-  } finally {
+    return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

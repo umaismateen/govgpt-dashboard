@@ -14,6 +14,7 @@ import {
   filterFns,
   useReactTable,
 } from "@tanstack/react-table";
+import { utils, writeFile } from "xlsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,6 +34,8 @@ import {
 import DataTableFacetedFilter from "./DataTableFacetedFilter";
 import { trialOptions, subscribedOptions, statusOptions } from "./options";
 import { DateRange } from "./DateRange";
+import { Download } from "lucide-react";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: {
@@ -71,6 +74,20 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const exportToExcel = () => {
+    // Convert table data to a worksheet
+    const filteredRows = table.getFilteredRowModel().rows;
+    const filteredData = filteredRows.map((row) => row.original);
+    const worksheet = utils.json_to_sheet(filteredData);
+
+    // Create a workbook and append the worksheet
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Save the workbook
+    writeFile(workbook, "users-data.xlsx");
+  };
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 items-center pb-4">
@@ -96,9 +113,13 @@ export function DataTable<TData, TValue>({
           title="Subscription Status"
           options={statusOptions}
         />
+        <Button className="h-8" onClick={exportToExcel}>
+          Download CSV <Download className="w-4 h-4 ml-2" />
+        </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="ml-auto h-8">
+            <Button size="sm" variant="secondary" className="ml-auto h-8">
               Columns
             </Button>
           </DropdownMenuTrigger>

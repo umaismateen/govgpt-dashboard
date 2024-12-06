@@ -30,6 +30,12 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    accessorKey: "phone_number",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Phone Number" />;
+    },
+  },
+  {
     accessorKey: "isontrial",
     header: "Is On Trial",
     cell: ({ row }) => (row.original.isontrial ? "Yes" : "No"),
@@ -70,7 +76,9 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Date Created",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Date Created" />;
+    },
     enableGlobalFilter: false, // disable global filtering for this column
     cell: ({ row }) => format(row.original.created_at, "do MMMM, yyyy"),
     filterFn: (row, id, value) => {

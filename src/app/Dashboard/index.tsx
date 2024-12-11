@@ -8,6 +8,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Users, AlertCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardTitle, CardContent, CardHeader } from "@/components/ui/card";
+import NetRevenueChart, { RevenueData } from "@/components/NetRevenueChart";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const { data, isLoading, error } = useQuery({
@@ -19,6 +21,18 @@ const Dashboard = () => {
         activeSubscriptionCount: number;
         trialUsersCount: number;
       };
+    },
+  });
+
+  const {
+    data: revenueData,
+    isLoading: revenueLoading,
+    error: revenueError,
+  } = useQuery({
+    queryKey: ["revenue-data"],
+    queryFn: async () => {
+      const response = await fetch("/api/revenue-data");
+      return (await response.json()) as RevenueData[];
     },
   });
 
@@ -72,6 +86,15 @@ const Dashboard = () => {
           data ?? { data: [], activeSubscriptionCount: 0, trialUsersCount: 0 }
         }
       />
+      <div className="mx-auto">
+        {revenueLoading ? (
+          <Skeleton className="h-[400px]" />
+        ) : revenueError ? (
+          <AlertDestructive />
+        ) : (
+          <NetRevenueChart data={revenueData ?? []} />
+        )}
+      </div>
     </>
   );
 };

@@ -32,7 +32,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DataTableFacetedFilter from "./DataTableFacetedFilter";
-import { trialOptions, subscribedOptions, statusOptions } from "./options";
+import {
+  trialOptions,
+  subscriptionPlanOptions,
+  subscribedOptions,
+  statusOptions,
+} from "./options";
 import { DateRange } from "./DateRange";
 import { Download } from "lucide-react";
 
@@ -90,7 +95,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 items-center pb-4">
+      <div className="flex flex-wrap gap-2 items-center">
         <Input
           placeholder="Filter..."
           value={globalFilter}
@@ -98,9 +103,19 @@ export function DataTable<TData, TValue>({
           className="max-w-[300px] min-w-[100px] h-8"
         />
         <DateRange table={table} />
+        <Button className="h-8" onClick={exportToExcel}>
+          Download CSV <Download className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2 items-center py-2">
         <DataTableFacetedFilter
           column={table.getColumn("isontrial")}
           title="Trial"
+          options={trialOptions}
+        />
+        <DataTableFacetedFilter
+          column={table.getColumn("phone_number")}
+          title="Phone Number"
           options={trialOptions}
         />
         <DataTableFacetedFilter
@@ -109,14 +124,15 @@ export function DataTable<TData, TValue>({
           options={subscribedOptions}
         />
         <DataTableFacetedFilter
+          column={table.getColumn("subscription_plan")}
+          title="Subscription Plan"
+          options={subscriptionPlanOptions}
+        />
+        <DataTableFacetedFilter
           column={table.getColumn("subscription_status")}
           title="Subscription Status"
           options={statusOptions}
         />
-        <Button className="h-8" onClick={exportToExcel}>
-          Download CSV <Download className="w-4 h-4 ml-2" />
-        </Button>
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="secondary" className="ml-auto h-8">

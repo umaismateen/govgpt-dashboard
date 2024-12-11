@@ -19,3 +19,14 @@ export const authOptions = {
     }),
   ],
 };
+
+export const getIsEnterprise = (priceId: string) => {
+  return {
+    price_1QMzgSHtuZjaClnWwXU6h1i4: true, //test: Enterprise Plan
+    price_1QMzhRHtuZjaClnWqUVZhjtG: true, //test: Enterprise Plan
+    price_1PYVXyRwNg4vrfp4tAbUiUhs: true, // main: Enterprise Plan monthly
+    price_1PYVXzRwNg4vrfp4WHVxUKse: true, // main: Enterprise Plan yearly
+    price_1PYVK6RwNg4vrfp4nhequUiJ: false, // Standard Plan
+    price_1PYVK5RwNg4vrfp4O2dS6MCT: false, // Standard Plan
+  }[priceId];
+};

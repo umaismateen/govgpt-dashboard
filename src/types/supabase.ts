@@ -7,6 +7,31 @@ export type Json =
   | Json[]
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       chat: {
@@ -64,15 +89,7 @@ export type Database = {
           id?: string
           stripe_customer_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "customers_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       enterprise_waitlist: {
         Row: {
@@ -324,6 +341,39 @@ export type Database = {
         }
         Relationships: []
       }
+      proposal_prompts: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: number
+          prompt: string | null
+          title: string
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          prompt?: string | null
+          title: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          prompt?: string | null
+          title?: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       proposals: {
         Row: {
           contract_name: string | null
@@ -352,15 +402,7 @@ export type Database = {
           proposal?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "proposals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       query_usage: {
         Row: {
@@ -525,15 +567,7 @@ export type Database = {
           trial_start?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       support_form: {
         Row: {
@@ -542,7 +576,7 @@ export type Database = {
           id: number
           message: string
           name: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -550,7 +584,7 @@ export type Database = {
           id?: number
           message: string
           name: string
-          user_id?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -558,9 +592,17 @@ export type Database = {
           id?: number
           message?: string
           name?: string
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "support_form_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       total_usage: {
         Row: {
@@ -602,13 +644,17 @@ export type Database = {
       }
       users: {
         Row: {
+          accepted_terms: boolean | null
+          additional_info: string | null
           address: string | null
           avatar_url: string | null
           billing_address: Json | null
           cageId: string | null
           chatbot_queries: number | null
+          created_at: string | null
           experience: number | null
           finder_queries: number | null
+          fingerprint: string | null
           full_name: string | null
           id: string
           Industry: string | null
@@ -616,17 +662,22 @@ export type Database = {
           organization: string | null
           payment_method: Json | null
           person_of_contact: string | null
+          phone_number: string | null
           proposal_writer_queries: number | null
           smart_alert_queries: number | null
         }
         Insert: {
+          accepted_terms?: boolean | null
+          additional_info?: string | null
           address?: string | null
           avatar_url?: string | null
           billing_address?: Json | null
           cageId?: string | null
           chatbot_queries?: number | null
+          created_at?: string | null
           experience?: number | null
           finder_queries?: number | null
+          fingerprint?: string | null
           full_name?: string | null
           id: string
           Industry?: string | null
@@ -634,17 +685,22 @@ export type Database = {
           organization?: string | null
           payment_method?: Json | null
           person_of_contact?: string | null
+          phone_number?: string | null
           proposal_writer_queries?: number | null
           smart_alert_queries?: number | null
         }
         Update: {
+          accepted_terms?: boolean | null
+          additional_info?: string | null
           address?: string | null
           avatar_url?: string | null
           billing_address?: Json | null
           cageId?: string | null
           chatbot_queries?: number | null
+          created_at?: string | null
           experience?: number | null
           finder_queries?: number | null
+          fingerprint?: string | null
           full_name?: string | null
           id?: string
           Industry?: string | null
@@ -652,18 +708,11 @@ export type Database = {
           organization?: string | null
           payment_method?: Json | null
           person_of_contact?: string | null
+          phone_number?: string | null
           proposal_writer_queries?: number | null
           smart_alert_queries?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       waitlist: {
         Row: {
@@ -694,6 +743,21 @@ export type Database = {
           month_name: string
           year: number
           total_queries: number
+        }[]
+      }
+      get_user_data_with_subscription_and_usage: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          created_at: string
+          email: string
+          phone_number: string
+          full_name: string
+          subscription_status: Database["public"]["Enums"]["subscription_status"]
+          contracts_found: number
+          alerts_set: number
+          saved_contracts: number
+          isontrial: boolean
         }[]
       }
     }
@@ -799,4 +863,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

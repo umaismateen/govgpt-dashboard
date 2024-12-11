@@ -18,6 +18,11 @@ export const subscribedOptions = [
   { label: "No", value: "No", icon: Circle },
 ];
 
+export const subscriptionPlanOptions = [
+  { label: "Pro", value: "Pro", icon: CircleCheck },
+  { label: "Basic", value: "Basic", icon: Circle },
+];
+
 export const statusOptions = [
   { label: "Active", value: "active", icon: CheckCircle }, // Positive, active status
   // { label: "Trialing", value: "trialing", icon: PauseCircle }, // Paused status can represent trial

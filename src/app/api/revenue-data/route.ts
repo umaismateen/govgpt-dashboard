@@ -59,7 +59,7 @@ export async function GET() {
             ? Number(
                 (
                   (monthlyVolumes[monthKey]?.netVolume || 0) -
-                  (balanceTransaction.net + balanceTransaction.fee) / 100
+                  balanceTransaction.fee / 100
                 ).toFixed(2)
               )
             : Number(

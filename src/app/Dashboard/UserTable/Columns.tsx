@@ -16,6 +16,7 @@ export interface User {
   isontrial: boolean;
   phone_number?: string;
   price_id?: string;
+  cancel_at_period_end?: boolean;
 }
 
 export const columns: ColumnDef<User>[] = [
@@ -82,6 +83,14 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "subscription_status",
     header: "Subscription Status",
     cell: ({ row }) => row.original.subscription_status || "N/A",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "cancel_at_period_end",
+    header: "Cancel at Period End",
+    cell: ({ row }) => (row.original.cancel_at_period_end ? "Yes" : "No"),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },

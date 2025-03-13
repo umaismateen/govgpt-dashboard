@@ -25,7 +25,7 @@ export const subscriptionPlanOptions = [
 
 export const statusOptions = [
   { label: "Active", value: "active", icon: CheckCircle }, // Positive, active status
-  // { label: "Trialing", value: "trialing", icon: PauseCircle }, // Paused status can represent trial
+  { label: "Trialing", value: "trialing", icon: PauseCircle }, // Paused status can represent trial
   { label: "Paused", value: "paused", icon: PauseCircle }, // Paused status
   { label: "Canceled", value: "canceled", icon: XCircle }, // Canceled status
   { label: "Incomplete", value: "incomplete", icon: AlertTriangle }, // Incomplete or missing information

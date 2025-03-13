@@ -21,7 +21,7 @@ function calculateCounts(users: User[]) {
     (user) => user.subscription_status === "active"
   ).length;
   const trialUsersCount = users.filter(
-    (user) => user.isontrial === true
+    (user) => user.subscription_status === "trialing"
   ).length;
 
   return { activeSubscriptionCount, trialUsersCount };
@@ -40,6 +40,7 @@ export async function GET(req: Request, res: Response) {
       "get_user_data_with_subscription_and_usage"
     );
     if (error) {
+      console.error("Error fetching user data:", error);
       return Response.json({ error: "Internal Server Error" }, { status: 500 });
     }
     return Response.json({

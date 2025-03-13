@@ -35,10 +35,6 @@ export async function GET() {
     > = {};
 
     charges.forEach((charge) => {
-      if (charge.billing_details?.email === "wegner.whg@gmail.com") {
-        console.log(charge);
-      }
-
       // Type assertion for expanded balance transaction
       const balanceTransaction =
         charge.balance_transaction as Stripe.BalanceTransaction;

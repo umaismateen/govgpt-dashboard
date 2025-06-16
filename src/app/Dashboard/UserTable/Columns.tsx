@@ -4,6 +4,49 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { format } from "date-fns";
 import { getIsEnterprise } from "@/app/api/lib";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
+import { useState } from "react";
+import SubscriptionChangeDialog from "@/components/SubscriptionChangeDialog";
+
+const UserActionsCell = ({ user }: { user: User }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const currentPlan = user?.price_id
+    ? getIsEnterprise(user.price_id)
+      ? "Pro"
+      : "Basic"
+    : "No Plan";
+
+  const handleOpenDialog = () => {
+    console.log(`Opening subscription change dialog for user: ${user.email}`);
+    setIsDialogOpen(true);
+  };
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleOpenDialog}
+        className="h-8"
+        title={`Change subscription plan for ${user.email}`}
+      >
+        <Settings className="w-4 h-4 mr-1" />
+        Change Plan
+      </Button>
+
+      <SubscriptionChangeDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        userId={user.id}
+        currentPlan={currentPlan}
+        userEmail={user.email}
+      />
+    </>
+  );
+};
+
 export interface User {
   id: string;
   created_at: string;
@@ -132,5 +175,12 @@ export const columns: ColumnDef<User>[] = [
         (!from || rowDate >= new Date(from)) && (!to || rowDate <= new Date(to))
       );
     },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    enableSorting: false,
+    enableGlobalFilter: false,
+    cell: ({ row }) => <UserActionsCell user={row.original} />,
   },
 ];

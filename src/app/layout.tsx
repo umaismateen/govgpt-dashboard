@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { NextAuthSessionProvider } from "@/app/Providers";
+import { Toaster } from "sonner";
 
 import "../app/globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
